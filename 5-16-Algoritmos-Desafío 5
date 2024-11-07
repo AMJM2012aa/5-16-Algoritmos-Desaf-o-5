@@ -1,0 +1,58 @@
+class Nodo:
+    def __init__(self, nombre, promedio):
+        self.nombre = nombre
+        self.promedio = promedio
+        self.izquierdo = None
+        self.derecho = None
+
+class ArbolDeClasificacion:
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, nombre, promedio):
+        nuevo_nodo = Nodo(nombre, promedio)
+        if self.raiz is None:
+            self.raiz = nuevo_nodo
+        else:
+            self._insertar_recursivo(self.raiz, nuevo_nodo)
+
+    def _insertar_recursivo(self, actual, nuevo_nodo):
+        if nuevo_nodo.promedio < actual.promedio:
+            if actual.izquierdo is None:
+                actual.izquierdo = nuevo_nodo
+            else:
+                self._insertar_recursivo(actual.izquierdo, nuevo_nodo)
+        else:
+            if actual.derecho is None:
+                actual.derecho = nuevo_nodo
+            else:
+                self._insertar_recursivo(actual.derecho, nuevo_nodo)
+
+    def recorrido_inorden(self):
+        estudiantes = []
+        self._inorden(self.raiz, estudiantes)
+        return estudiantes
+
+    def _inorden(self, actual, estudiantes):
+        if actual is not None:
+            self._inorden(actual.izquierdo, estudiantes)
+            estudiantes.append((actual.nombre, actual.promedio))
+            self._inorden(actual.derecho, estudiantes)
+
+# Ejemplo de uso
+arbol = ArbolDeClasificacion()
+estudiantes = [
+    ("Ana", 85),
+    ("Luis", 90),
+    ("Pedro", 78),
+    ("María", 92),
+    ("Carla", 88)
+]
+
+for nombre, promedio in estudiantes:
+    arbol.insertar(nombre, promedio)
+
+# Imprimir estudiantes en orden ascendente de promedio
+print("Estudiantes en orden ascendente de rendimiento académico:")
+for nombre, promedio in arbol.recorrido_inorden():
+    print(f"{nombre}: {promedio}")
